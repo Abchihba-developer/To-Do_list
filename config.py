@@ -14,8 +14,16 @@ class DatabaseConfig(BaseSettings):
     DB_PASS: str
     DB_NAME: str
 
+    echo: bool = True
+    pool_size: int = 5
+    max_overflow: int = 10
+
+    autocommit: bool = False
+    autoflush: bool = False
+    expire_on_commit: bool = False
+
     @property
-    def DB_URL_ASYNCPG(self):
+    def DB_URL_ASYNCPG(self) -> str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     model_config = SettingsConfigDict(env_file=".env")
