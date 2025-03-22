@@ -8,6 +8,11 @@ class TaskBase(BaseModel):
 class TaskCreate(TaskBase):
     pass
 
+class TaskUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    completed: bool | None = None
+
 class Task(TaskBase): # Отображение задачи
     id: int
 
