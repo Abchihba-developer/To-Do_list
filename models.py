@@ -2,6 +2,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
 from database import Base
 
+
 class Task_DB(Base):
     __tablename__ = "tasks"
 

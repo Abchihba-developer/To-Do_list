@@ -1,13 +1,14 @@
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 class RunConfig(BaseModel):
 
     host: str = "127.0.0.1"
     port: int = 8080
 
-class DatabaseConfig(BaseSettings):
 
+class DatabaseConfig(BaseSettings):
     DB_HOST: str
     DB_PORT: int
     DB_USER: str
@@ -32,5 +33,6 @@ class DatabaseConfig(BaseSettings):
 class Settings(RunConfig):
     run: RunConfig = RunConfig()
     db: DatabaseConfig = DatabaseConfig()
+
 
 settings = Settings()

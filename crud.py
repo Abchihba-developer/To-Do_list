@@ -1,14 +1,15 @@
 from sqlalchemy import text
-from typing import List, Optional
-from database import async_engine, async_session_factory
+from typing import List
+from database import async_engine
 from models import Task_DB
 from shemas import Task
-import asyncio
+
 
 async def create_db_table():
     async with async_engine.begin() as conn:
         await conn.run_sync(Task_DB.metadata.drop_all)
         await conn.run_sync(Task_DB.metadata.create_all)
+
 
 async def create_task(title: str, description: str | None = None, completed: bool | None = False):
     async with async_engine.connect() as conn:
@@ -21,11 +22,13 @@ async def create_task(title: str, description: str | None = None, completed: boo
         created_task = res.fetchone()
         return created_task
 
+
 async def get_task(task_id: int) -> Task:
     async with async_engine.connect() as conn:
         stmt = text("SELECT * FROM tasks WHERE id=:param1")
         res = await conn.execute(stmt, {"param1": task_id})
         return res.fetchone()
+
 
 async def get_tasks(skip: int = 0, limit: int = 10) -> List[Task]:
     async with async_engine.connect() as conn:
@@ -34,6 +37,7 @@ async def get_tasks(skip: int = 0, limit: int = 10) -> List[Task]:
         LIMIT :param1 OFFSET :param2""")
         res = await conn.execute(stmt, {"param1": limit, "param2": skip})
         return res.fetchall()
+
 
 async def update_task(task_id: int, title: str | None = None, description: str | None = None, completed: bool | None = None):
     async with async_engine.connect() as conn:
@@ -59,11 +63,11 @@ async def update_task(task_id: int, title: str | None = None, description: str |
         updated_task = res.fetchone()
         return updated_task
 
+
 async def delete_task(task_id: int):
     async with async_engine.connect() as conn:
         res = await conn.execute(text("DELETE FROM tasks WHERE id = :param1 RETURNING *"), {"param1": task_id})
         await conn.commit()
         deleted_task = res.fetchone()
         return deleted_task
-
 
